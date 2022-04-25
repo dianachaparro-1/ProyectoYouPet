@@ -1,0 +1,19 @@
+<div class="login-page">
+    <div class="form">
+      <form class="login-form">
+        <div class="title">Iniciar sesión</div>
+        <div style="width: 100%">
+          <mat-form-field style="width: 100%;">
+            <mat-label>Usuario</mat-label>
+            <input [formControl]="userData.get('username')" matInput>
+        </mat-form-field>
+        <mat-form-field style="width: 100%; margin-bottom: 1rem;">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" [formControl]="userData.get('password')" matInput>
+        </mat-form-field>
+        </div>
+        <button (click)="login()" style="font-size: 12pt; margin-bottom: 0.5rem;" class="primary-button" mat-raised-button>Continuar</button>
+        <button (click)="signup()" style="margin-top: 0.5rem; font-family: 'NunitoSemiBold'; font-size: 12pt" mat-button>Crear una cuenta</button>
+      </form>
+    </div>
+  </div>

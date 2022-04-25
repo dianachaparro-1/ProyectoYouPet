@@ -1,0 +1,32 @@
+.container {
+    margin: 1.5rem;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    border-radius: 8px;
+    width: 70%;
+}
+
+.thumbnail {
+    width: 7rem;
+    border-radius: 7px;
+    object-fit: cover;
+    width: 120px;
+    height: 120px;
+}
+
+.title {
+    font-family: 'NunitoBold';
+    font-size: 15pt !important;
+    //margin-top: 0.4rem;
+    margin-bottom: 0.4em;
+}
+
+.price {
+    font-family: 'NunitoSemiBold';
+    font-size: 12pt !important;
+}
+
+.information {
+    margin-top: 5px;
+}

@@ -1,0 +1,42 @@
+.container {
+    padding-top: 1.5rem;
+    //width: 100%;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto 80vh auto;
+    height: 4rem;
+}
+
+.title {
+    margin-top: 1rem;
+    font-family: 'NunitoBold';
+    font-size: 22pt !important;
+}
+
+.input-text{
+    width: 70% !important; 
+}
+
+.action { 
+    margin-top: 0.5rem;
+}
+
+.name {
+    font-family: 'NunitoSemiBold';
+    font-size: 15pt;
+    margin-bottom: 5px;
+}
+
+.subname {
+    font-family: 'NunitoSemiBold';
+    font-size: 10pt;
+}
+
+hr.style-six {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}

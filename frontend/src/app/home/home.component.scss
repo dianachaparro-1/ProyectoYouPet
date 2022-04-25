@@ -1,0 +1,19 @@
+.carrousel {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
+.products {
+    width: 60%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 0.5rem;
+}
+
+.subtitle {
+    width: 100%;
+    font-family: 'NunitoBold';
+    text-align: left;
+    font-size: 14pt;
+}

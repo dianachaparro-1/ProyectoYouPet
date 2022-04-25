@@ -1,0 +1,7 @@
+<div *ngIf="showDropdownMenu" class="container">
+    <div class="button" *ngIf="showAdmin" (click)="goTo('product/detail')">Publicar producto</div>
+    <div class="button" *ngIf="showAdmin" (click)="goTo('admin')">Administrador</div>
+    <div class="button" *ngIf="showClient" (click)="goTo('purchases')">Compras</div>
+    <div class="button" (click)="goTo('profile')">Perfil</div>
+    <div class="button" (click)="goTo('logout')">Salir</div>
+</div>

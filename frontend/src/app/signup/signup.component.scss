@@ -1,0 +1,55 @@
+.login-page {
+    width: 40rem;
+    padding: 8% 0 0;
+    margin: auto;
+  }
+
+  .form {
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
+    //max-width: 100em;
+    margin: 0 auto 100px;
+    padding: 3.2rem;
+    padding-bottom: 2.6rem;
+    text-align: center;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    border-radius: 10px;
+  }
+
+  .form button {
+    width: 80%;
+    height: 38px;
+  }
+  
+  .title {
+    text-align: left;
+    font-family: "NunitoBold";
+    font-size: 20pt;
+    margin-bottom: 1.7rem;
+  }
+  
+  .forgot-password {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 1.2rem;
+    margin-top: 0.2rem;
+    font-size: 10pt;
+    font-family: "NunitoSemiBold";
+  }
+
+  .fields {
+      display: grid;
+      grid-template-columns: auto auto;
+      margin: 1rem;
+  }
+
+  .field {
+      margin-right: 2rem;
+      margin-bottom: 1rem;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: auto 11rem auto; 
+  }

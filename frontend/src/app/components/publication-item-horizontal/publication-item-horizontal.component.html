@@ -1,0 +1,12 @@
+<div class="container ">
+    <div>
+        <img alt="Imagen no encontrada" class="thumbnail " alt="Imagen" src="{{item.image}}">
+    </div>
+    <div class="information">
+        <div class="title ">{{item.name}}</div>
+        <div class="price ">{{formatter.format(item.price)}}</div>
+        <div class="price ">{{item.timestamp}}</div>
+        <div class="price ">{{item.amount}} und.</div>
+        <div class="price ">{{item.freeShipping ? "Envío gratis" : "Sin envío gratis"}}</div>
+    </div>
+</div>

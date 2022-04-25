@@ -1,0 +1,41 @@
+<div class="product_page">
+    <div></div>
+    <div class="product" style="text-align: left">
+        <div style="text-align: left; margin-bottom: 1.4rem; font-family: 'NunitoSemiBold'; font-size: 12pt;"
+            class="button" (click)="goBack()">Regresar</div>
+        <div class="product-name">{{item?.name}}</div>
+        <div style="grid-template-columns: auto auto; display: grid;">
+            <div>
+                <div class="image-container">
+                    <img *ngIf="item?.image" class="publication-image" alt="Imagen" src="{{item?.image}}">
+                </div>
+                <br>
+            </div>
+            <div>
+                <div class="product-description">
+                    <div class="emphasized">Características</div>
+                    <mat-form-field>
+                        <mat-label>Cantidad</mat-label>
+                        <mat-select [(ngModel)]="selectedAmount">
+                            <mat-option [value]="null">Seleccionar</mat-option>
+                          <mat-option *ngFor="let amount of amountList" [value]="amount">
+                            {{amount}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    <div>Descripción: {{item?.description}}</div>
+                    <br>
+                    <div>Etiquetas: {{item?.tags}}</div>
+                    <br>
+                    <div>{{item?.freeShipping ? "Aplica para envío gratis" : "No aplica para envío gratis"}}</div>
+                    <br>
+                    <mat-checkbox [(ngModel)]="agreements" style="margin-bottom: 2rem;" color="primary">Acepto los términos y condiciones del
+                        servicio</mat-checkbox>
+                        <div style="text-align: center; width: 100%;">
+                            <button style="width: 40%" (click)="purchase()" class="primary-button" mat-raised-button
+                            color="blue">Comprar</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>

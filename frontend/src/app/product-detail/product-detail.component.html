@@ -1,0 +1,61 @@
+<div class="product_page">
+    <div></div>
+    <div class="product">
+        <div style="text-align: left; margin-bottom: 1rem; font-family: 'NunitoSemiBold'; font-size: 12pt;"
+            class="button" (click)="goBack()">Regresar</div>
+        <div class="product-name">
+            <mat-form-field class="example-full-width">
+                <mat-label>Nombre del producto</mat-label>
+                <input readonly="{{readOnly}}" [formControl]="itemData.get('name')" matInput>
+                <mat-error *ngIf="!itemData.get('name').valid">Nombre del producto inválido</mat-error>
+            </mat-form-field>
+        </div>
+        <img class="publication-image" alt="Imagen no cargada" *ngIf="imageURL" src="{{imageURL}}">
+        <mat-form-field class="example-chip-list example-full-width">
+            <mat-label>URL de la imagen del articulo</mat-label>
+            <input readonly={{readOnly}} [(ngModel)]="imageURL" matInput>
+        </mat-form-field>
+        <mat-form-field class="example-chip-list example-full-width">
+            <mat-label>Etiquetas</mat-label>
+            <mat-chip-list #chipList aria-label="Tags">
+                <mat-chip *ngFor="let tag of tags" [selectable]="!readOnly" [removable]="!readOnly"
+                    (removed)="remove(tag)">
+                    {{tag}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input disabled="{{readOnly}}" placeholder="Añadir etiqueta..." [formControl]="itemData.get('tag')"
+                    [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+        </mat-form-field>
+
+        <div class="description">
+            <mat-form-field class="example-full-width">
+                <mat-label>Descripción</mat-label>
+                <textarea readonly="{{readOnly}}" [formControl]="itemData.get('description')" matInput></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="payment-plan">
+        <b class="emphasized">Facturación</b>
+        <br><br>
+        <mat-form-field>
+            <mat-label>Monto del producto</mat-label>
+            <input readonly="{{readOnly}}" currencyMask [options]="{ allowNegative: false, precision: 0, nullable: true, allowZero: true, default: 0 }" [formControl]="itemData.get('price')" matInput>
+            <mat-error *ngIf="!itemData.get('price').valid">Monto inválido</mat-error>
+        </mat-form-field>
+          <br>
+        <div class="emphasized">Envios</div>
+        <mat-checkbox disabled="{{readOnly}}" [formControl]="itemData.get('freeShipping')" color="primary">Envío gratis</mat-checkbox>
+        <br>
+        <br>
+        <button style="width: 35%; margin-bottom: 1rem;" (click)="callFunction()" class="primary-button" mat-raised-button
+            color="blue">{{rentBtnTitle}}</button>
+        <br>
+        <button *ngIf="!readOnly" style="width: 35%; background-color: red;" (click)="deleteItem()" class="primary-button" mat-raised-button
+            >Eliminar</button>
+
+    </div>
+    <div></div>
+    <div></div>
+</div>

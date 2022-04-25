@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('assets/fonts/Nunito-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+  
+@font-face {
+  font-family: 'NunitoSemiBold';
+  src: url('assets/fonts/Nunito-SemiBold.ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+  
+  
+@font-face {
+  font-family: 'NunitoBold';
+  src: url('assets/fonts/Nunito-Bold.ttf');
+  font-weight: 700;
+  font-style: normal;
+}  
+
+:root {
+  --link: #00A2FF;
+  --button: #00A2FF;
+  --azulito: #e8f0fa;
+  --grisecito: #f8f8f8;
+  --mas-grisecito: #d4d4d4;
+}
+
+$custom-typography: mat-typography-config($font-family: '"Nunito", sans-serif;');
+@include mat-core($custom-typography);
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Nunito, "Helvetica Neue", sans-serif; }
+
+.button {
+  outline: none;
+  cursor: pointer;
+}
+
+.primary-button {
+  background-color: var(--button);
+  color: white;
+}
+
+.disable-select {
+  user-select: none; /* supported by Chrome and Opera */
+ -webkit-user-select: none; /* Safari */
+ -khtml-user-select: none; /* Konqueror HTML */
+ -moz-user-select: none; /* Firefox */
+ -ms-user-select: none; /* Internet Explorer/Edge */
+}

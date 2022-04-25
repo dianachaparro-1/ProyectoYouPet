@@ -1,0 +1,90 @@
+.reviews {
+    display: grid;
+    grid-template-columns: auto;
+    text-align: left;
+    margin-top: 3rem;
+}
+
+.product {
+    width: 100%;
+    text-align: center;
+}
+
+.product_page {
+    width: 100%;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 2.5rem;
+    margin-left: 7rem;
+    margin-right: 5rem;
+}
+
+.description {
+    font-family: 'NunitoSemiBold';
+    font-size: 12pt !important;
+    width: 100%;
+    text-align: left;
+    margin-top: 3rem;
+}
+
+.publication-image {
+    object-fit: cover;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+}
+
+.publication-thumbnail {
+    width: 100%;
+    margin-right: 1rem;
+    border-radius: 5px;
+}
+.publication-media {
+    display: grid;
+    grid-template-columns: 15% 80%;
+    column-gap: 1rem;
+    margin-top: 1rem;
+}
+
+.payment-plan {
+    margin-top: 3.3rem;
+    text-align: left;
+}
+
+.emphasized {
+    font-size: 18pt;
+    margin-bottom: 1rem;
+    margin-top: 0rem;
+    font-weight: 500;
+}
+
+.q-and-as {
+    display: grid;
+    grid-template-columns: auto;
+    text-align: left;
+    margin-top: 3rem;
+}
+
+.return {
+    height: 2rem;
+    width: 5.5rem;
+    margin-right: 4rem;
+    margin-left: auto;
+}
+
+.product-name {
+    font-size: 24pt;
+    font-style: bold;
+    text-align: left;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.payment-method {
+    font-size: 18pt;
+    font-style: bold;
+    text-align: left;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}

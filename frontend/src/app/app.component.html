@@ -1,0 +1,6 @@
+<app-nav-bar *ngIf="!(this.router.url === '/login') && !(this.router.url === '/signup')"></app-nav-bar>
+<app-login-title *ngIf="(this.router.url === '/login') || (this.router.url === '/signup')"></app-login-title>
+
+<router-outlet></router-outlet>
+
+<!--<p id="footer" class="text-muted text-center copy">YouPet · 2021</p>-->

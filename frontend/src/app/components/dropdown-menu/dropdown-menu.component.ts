@@ -21,7 +21,7 @@ export class DropdownMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.showAdmin = window.sessionStorage.getItem('role') == 'admin' ? true : false;
-    this.showClient = window.sessionStorage.getItem('role') == 'client' ? true : false;
+    this.showClient = window.sessionStorage.getItem('role') == 'cliente' ? true : false;
   }
 
   async navigate(route) {
@@ -41,9 +41,8 @@ export class DropdownMenuComponent implements OnInit {
         cancelButtonText: 'Cancelar'
       }).then(async (result) => {
         if (result.isConfirmed) {
-          window.sessionStorage.removeItem('user');
-          window.sessionStorage.removeItem('role');
-          await this.router.navigate(['login']);
+          window.sessionStorage.clear();
+          await this.router.navigate(['/login']);
         } else {
           Swal.close();
         }

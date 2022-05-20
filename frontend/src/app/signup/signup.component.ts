@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,40 +18,40 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly formBuilder: FormBuilder
-  ) {}
+    private readonly formBuilder: FormBuilder,
+    private readonly httpClient: HttpClient
+  ) { }
 
   ngOnInit(): void {
+
   }
 
-  signup() {
+  async signup() {
     if (this.userFormComponent.userData.valid) {
       if (this.userFormComponent.userData.value.password1 == this.userFormComponent.userData.value.password2) {
-        let users = window.sessionStorage.getItem("users") ? JSON.parse(window.sessionStorage.getItem("users")) : [];
-        if (users.find(user => (user.username == this.userFormComponent.userData.value.username) || (user.email == this.userFormComponent.userData.value.email))) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'El usuario ya existe',
-            allowOutsideClick: false
-          });
-        } else {
-          let user = this.userFormComponent.userData.value;
-          user.id = users.length + 1;
-          delete user.password2;
-          user.password = this.userFormComponent.userData.value.password1;
-          delete user.password1;
-          users.push(user);
-          window.sessionStorage.setItem("users", JSON.stringify(users));
+        let user = this.userFormComponent.userData.value;
+        user.documentType = JSON.parse(user.documentType);
+        delete user.password2;
+        delete user.id;
+        user.password = this.userFormComponent.userData.value.password1;
+        delete user.password1;
+        try {
+          await this.httpClient.post(`${environment.baseURL}/user/signup`, user).toPromise();
           Swal.fire({
             icon: 'success',
             title: 'Usuario creado exitosamente',
             allowOutsideClick: false,
-            timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: true
           }).then(() => {
             this.router.navigate(['login']);
           })
+        } catch (e) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en la creación del usuario',
+            allowOutsideClick: false
+          });
         }
       } else {
         Swal.fire({

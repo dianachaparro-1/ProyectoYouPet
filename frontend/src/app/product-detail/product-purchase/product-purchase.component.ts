@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'environments/environment';
 
 
 @Component({
@@ -24,50 +26,53 @@ export class ProductPurchaseComponent implements OnInit {
     maximumFractionDigits: 0,
   });
   item: any;
-  amountList: string[] = Array.from({length: 10}, (_, i) => i + 1).map(i => i.toString());
+  amountList: string[] = Array.from({ length: 10 }, (_, i) => i + 1).map(i => i.toString());
   selectedAmount: string = "";
 
   constructor(
     private readonly location: Location,
     private readonly route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly httpClient: HttpClient
   ) { }
 
   ngOnInit(): void {
-    let items = JSON.parse(window.sessionStorage.getItem("products"))
-    this.productId = this.route.snapshot.queryParams.productId
-    this.item = items.find(item => item.id == this.productId);
+    this.httpClient.get(`${environment.baseURL}/product/getId/${this.route.snapshot.queryParams.productId}`).subscribe({
+      next: (data) => {
+        this.item = data;
+        this.productId = this.route.snapshot.queryParams.productId;
+      }
+    })
   }
 
   goBack() {
     this.location.back();
   }
 
-  purchase() {
+  async purchase() {
     if (this.agreements && this.selectedAmount) {
-      Swal.fire({ title: "Cargando", allowOutsideClick: false });
-      Swal.showLoading();
-      setTimeout(() => {
+      if (parseFloat(this.selectedAmount) <= this.item.stock) {
+        Swal.fire({ title: "Cargando", allowOutsideClick: false });
+        Swal.showLoading();
+        let userResponse = await this.httpClient.get(`${environment.baseURL}/user/getUsername/${window.sessionStorage.getItem('user')}`).toPromise();
+        let saleResponse = await this.httpClient.put(`${environment.baseURL}/sale/put`, { user: userResponse, date: new Date(), totalPrice: parseFloat(this.selectedAmount) * this.item.price }).toPromise();
+        let purchasedProducts = await this.httpClient.put(`${environment.baseURL}/purchasedProduct/put`, { amount: parseFloat(this.selectedAmount), product: this.item, sale: saleResponse }).toPromise();
+        this.item.stock -= parseInt(this.selectedAmount);
+        let productUpdateResponse = await this.httpClient.put(`${environment.baseURL}/product/put`, this.item).toPromise();
         Swal.close();
-        Swal.fire({ title: "Compra realizada exitosamente", allowOutsideClick: false, icon: "success", timer: 2000, showConfirmButton: false }).then(() => {
-          let purchases = window.sessionStorage.getItem("purchases") ? JSON.parse(window.sessionStorage.getItem("purchases")) : [];
-          let items = JSON.parse(window.sessionStorage.getItem("products"))
-          let item = items.find(item => item.id == this.productId);
-          item.id = purchases.length + 1;
-          item.user = window.sessionStorage.getItem("user");
-          item.timestamp = ("0" + new Date().getDate()).slice(-2) + "-" + ("0"+(new Date().getMonth()+1)).slice(-2) + "-" +
-          new Date().getFullYear() + " " + ("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2);
-          item.amount = this.selectedAmount;
-          purchases.push(item);
-          window.sessionStorage.setItem("purchases", JSON.stringify(purchases));
-          this.router.navigate(['/'])
+        Swal.fire({ title: "Compra realizada exitosamente", allowOutsideClick: false, icon: "success", timer: 2000, showConfirmButton: false }).then(async () => {
+          this.router.navigate(['/']);
         })
-      }, 4000)
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No hay suficiente stock',
+          allowOutsideClick: false
+        });
+      }
     } else {
       Swal.fire({ title: "Por favor complete el formulario", allowOutsideClick: false, icon: 'warning' });
     }
   }
-
-
-
 }

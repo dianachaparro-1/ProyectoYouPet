@@ -1,7 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +18,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly formBuilder: FormBuilder,
+    private readonly httpClient: HttpClient
   ) {
     this.userData = this.formBuilder.group({
       username: ['', Validators.required],
@@ -38,15 +42,16 @@ export class LoginComponent implements OnInit {
     if (this.userData.valid) {
       Swal.fire({title: "Cargando..", allowOutsideClick: false});
       Swal.showLoading();
-      let users = window.sessionStorage.getItem("users") ? JSON.parse(window.sessionStorage.getItem("users")) : [];
-      let user = users.find(user => (user.username == this.userData.value.username) && (user.password == this.userData.value.password));
-      if (user) {
-        await this.navigate(user.username, user.role);
-      } else {
+      try {
+        let loginResponse:any = await this.httpClient.post(`${environment.baseURL}/login`, this.userData.value, {responseType: 'text'}).toPromise()
+        window.sessionStorage.setItem("token", loginResponse);
+        let userData:any = jwt_decode(loginResponse);
+        await this.navigate(userData.sub, userData.Authorities.substring(userData.Authorities.indexOf("_") + 1).toLowerCase());
+      } catch (e) {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'El usuario no existe',
+          text: 'Credenciales inválidas',
           allowOutsideClick: false
         });
       }

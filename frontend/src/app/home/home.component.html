@@ -1,8 +1,8 @@
 <div class="products">
     <div *ngIf="loaded" class="subtitle">Recomendados para ti</div>
     <div class="carrousel">
-        <div *ngFor="let item of publicaciones; let i = index">
-            <app-publication-item  *ngIf="loaded" [image]="publicaciones[i]?.image" [title]="parseName(publicaciones[i]?.name)" [price]="publicaciones[i]?.price" [id]="publicaciones[i]?.id" ></app-publication-item>
+        <div *ngFor="let item of products let i = index">
+            <app-publication-item  *ngIf="loaded" [imageURL]="products[i]?.imageURL" [title]="parseName(products[i]?.name)" [price]="products[i]?.price" [id]="products[i]?.id" ></app-publication-item>
         </div>
     
 </div>

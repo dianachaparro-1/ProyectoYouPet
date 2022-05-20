@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -7,16 +9,18 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  publicaciones
+  products
   loaded: Boolean = false
   username: string;
   constructor(
     private readonly router: Router,
+    private readonly httpClient: HttpClient,
   ) { }
 
-  ngOnInit(): void {
-    if (window.sessionStorage.getItem("products")) {
-      this.publicaciones = JSON.parse(window.sessionStorage.getItem("products"))
+  async ngOnInit() {
+    let products = await this.httpClient.get(`${environment.baseURL}/product/getAll`).toPromise()
+    if (products) {
+      this.products = products;
       this.loaded = true;
     }
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, P } from '@angular/cdk/keycodes';
 import { Location } from '@angular/common';
 import { ImagePickerConf } from 'ngp-image-picker';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { environment } from 'environments/environment';
 import Swal from 'sweetalert2';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-detail',
@@ -46,18 +47,19 @@ export class ProductDetailComponent implements OnInit {
   rentBtnTitle: String;
   readOnly: boolean = false;
 
-
   constructor(
     private readonly location: Location,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly httpClient: HttpClient
   ) {
     this.itemData = this.formBuilder.group({
       id: [''],
-      image: [''],
+      imageURL: [''],
       name: ['', Validators.required],
       price: ['', Validators.required],
+      stock: ['', Validators.required],
       description: ['', Validators.required],
       freeShipping: [false],
       tags: [''],
@@ -67,19 +69,21 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.route.snapshot.queryParams.mode == 1 || this.route.snapshot.queryParams.mode == 2) {
-      let items = JSON.parse(window.sessionStorage.getItem("products"));
-      let item = items.find(item => item.id == this.route.snapshot.queryParams.productId);
-      item.tag = null;
-      this.tags = item.tags;
-      this.imageURL = item.image;
-      this.itemData.setValue(item);
-      if (this.route.snapshot.queryParams.mode == 1) {
-        this.action = "update";
-        this.rentBtnTitle = "Actualizar";
-      } else {
-        this.rentBtnTitle = "Comprar";
-        this.readOnly = true;
-      }
+      this.httpClient.get(`${environment.baseURL}/product/getId/${this.route.snapshot.queryParams.productId}`).subscribe({
+        next: (item: any) => {
+          item.tag = null;
+          this.tags = item.tags.replace(/[\[\]']+/g, '').split(",");
+          this.imageURL = item.imageURL;
+          this.itemData.setValue(item);
+          if (this.route.snapshot.queryParams.mode == 1) {
+            this.action = "update";
+            this.rentBtnTitle = "Actualizar";
+          } else {
+            this.rentBtnTitle = "Comprar";
+            this.readOnly = true;
+          }
+        }
+      })
     } else if (this.route.snapshot.queryParams.mode == 0) {
       this.action = "create";
       this.rentBtnTitle = "Publicar";
@@ -127,22 +131,31 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  uploadItem() {
+  async uploadItem() {
     Swal.fire({ title: 'Cargando', allowOutsideClick: false });
     Swal.showLoading();
-    this.itemData.get("image").setValue(this.imageURL)
+    this.itemData.get("imageURL").setValue(this.imageURL)
     this.itemData.get("tags").setValue(this.tags)
     this.markFormGroupTouched(this.itemData)
     if (this.itemData.valid && this.imageURL) {
       let item = this.itemData.value
       delete item.tag;
-      let savedItems = window.sessionStorage.getItem("products") ? JSON.parse(window.sessionStorage.getItem("products")) : []
-      item.id = savedItems.length + 1;
-      savedItems.push(item);
-      window.sessionStorage.setItem("products", JSON.stringify(savedItems));
-      Swal.fire({ title: 'Publicado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
-        this.router.navigate(['/'])
-      })
+      item.tags = `[${item.tags.toString()}]`;
+      try {
+        let updateResponse = await this.httpClient.put(`${environment.baseURL}/product/put`, item).toPromise();
+        Swal.close();
+        Swal.fire({ title: 'Publicado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
+          this.router.navigate(['/'])
+        })
+      } catch (error) {
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al crear',
+          allowOutsideClick: false
+        });
+      }
     } else {
       Swal.close()
       Swal.fire({
@@ -154,23 +167,32 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
-  updateItem() {
+  async updateItem() {
     Swal.fire({ title: 'Cargando', allowOutsideClick: false });
     Swal.showLoading();
-    this.itemData.get("image").setValue(this.imageURL)
+    this.itemData.get("imageURL").setValue(this.imageURL)
     this.itemData.get("tags").setValue(this.tags)
     this.markFormGroupTouched(this.itemData)
     if (this.itemData.valid && this.imageURL) {
       let item = this.itemData.value
       delete item.tag;
-      let savedItems = JSON.parse(window.sessionStorage.getItem("products"))
-      let itemIndex = savedItems.findIndex(item => item.id == this.itemData.value.id)
-      savedItems[itemIndex] = item;
-      window.sessionStorage.setItem("products", JSON.stringify(savedItems));
-      Swal.close();
-      Swal.fire({ title: 'Actualizado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
-        this.router.navigate(['/'])
-      })
+      item.tags = `[${item.tags.toString()}]`;
+      item.id = this.route.snapshot.queryParams.productId;
+      try {
+        let updateResponse = await this.httpClient.put(`${environment.baseURL}/product/put`, item).toPromise();
+        Swal.close();
+        Swal.fire({ title: 'Actualizado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
+          this.router.navigate(['/'])
+        })
+      } catch (error) {
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al actualizar',
+          allowOutsideClick: false
+        });
+      }
     } else {
       Swal.close()
       Swal.fire({
@@ -184,7 +206,16 @@ export class ProductDetailComponent implements OnInit {
 
   purchaseItem() {
     if (window.sessionStorage.getItem("user")) {
-      this.router.navigate(["product/purchase"], { queryParams: { productId: this.itemData.value.id } });
+      if (this.itemData.get("stock").value > 0) {
+        this.router.navigate(["product/purchase"], { queryParams: { productId: this.itemData.value.id } });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No hay stock disponible',
+          allowOutsideClick: false
+        });
+      }
     } else {
       Swal.fire({
         icon: 'warning',
@@ -207,12 +238,12 @@ export class ProductDetailComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.value) {
-        let savedItems = JSON.parse(window.sessionStorage.getItem("products"))
-        let itemIndex = savedItems.findIndex(item => item.id == this.itemData.value.id)
-        savedItems.splice(itemIndex, 1);
-        window.sessionStorage.setItem("products", JSON.stringify(savedItems));
-        Swal.fire({ title: 'Eliminado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
-          this.router.navigate(['/'])
+        this.httpClient.delete(`${environment.baseURL}/product/delete/${this.route.snapshot.queryParams.productId}`).subscribe({
+          next: (response) => {
+            Swal.fire({ title: 'Eliminado exitosamente', allowOutsideClick: false, icon: 'success', timer: 2000, showConfirmButton: false }).then((result) => {
+              this.router.navigate(['/'])
+            })
+          }
         })
       }
     })

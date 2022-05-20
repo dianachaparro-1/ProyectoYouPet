@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 import { timer } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -15,13 +17,16 @@ export class PurchasesComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly httpClient: HttpClient
   ) {}
 
   ngOnInit(): void {
-    let purchases = JSON.parse(window.sessionStorage.getItem('purchases'));
-    purchases.filter(purchase => purchase.user == window.sessionStorage.getItem('user'))
-    this.purchases = purchases;
+    this.httpClient.get(`${environment.baseURL}/product/getUsername/${window.sessionStorage.getItem("user")}`).subscribe({
+      next: (purchases: any) => {
+        this.purchases = purchases;
+      }
+    })
   }
 
   async goBack() {

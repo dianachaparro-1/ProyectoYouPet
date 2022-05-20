@@ -18,8 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgxCurrencyModule } from "ngx-currency";
 import {MatCardModule} from '@angular/material/card';
 import {MatSliderModule} from '@angular/material/slider';
-
-
+import { AuthInterceptor } from 'app/core/tools/auth.interceptor';
 
 import { LoginTitleComponent } from './components/login-title/login-title.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
@@ -33,6 +32,7 @@ import { ProductPurchaseComponent } from './product-detail/product-purchase/prod
 import { PublicationItemHorizontalComponent } from './components/publication-item-horizontal/publication-item-horizontal.component';
 import { PurchasesComponent } from './purchases/purchases.component';
 import { ExcelService } from './core/services/excel.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -69,10 +69,12 @@ import { ExcelService } from './core/services/excel.service';
     MatIconModule,
     NgxCurrencyModule,
     MatCardModule,
-    MatSliderModule
+    MatSliderModule,
+    HttpClientModule
   ],
   providers: [
-    ExcelService
+    ExcelService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

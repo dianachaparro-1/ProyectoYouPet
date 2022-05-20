@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 export class PublicationItemComponent implements OnInit {
 
 
-  @Input() image
+  @Input() imageURL
   @Input() title
   @Input() price
   @Input() id

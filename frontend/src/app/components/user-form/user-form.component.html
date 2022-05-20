@@ -2,8 +2,8 @@
     <div class="fields">
       <mat-form-field class="field">
           <mat-label>Nombres</mat-label>
-          <input [formControl]="userData.get('name')" matInput>
-          <mat-error *ngIf="!userData.get('name').valid">Nombres inválidos</mat-error>
+          <input [formControl]="userData.get('firstName')" matInput>
+          <mat-error *ngIf="!userData.get('firstName').valid">Nombres inválidos</mat-error>
       </mat-form-field>
       <mat-form-field class="field">
           <mat-label>Apellidos</mat-label>
@@ -24,8 +24,7 @@
         <mat-label>Tipo de Documento</mat-label>
         <mat-select [formControl]="userData.get('documentType')" >
           <mat-option [value]="null">Seleccionar</mat-option>
-          <mat-option value="C.C." >C.C.</mat-option>
-          <mat-option value="C.C." >N.I.T.</mat-option>
+          <mat-option *ngFor="let type of documentTypes" value={{formatDocumentType(type)}} >{{type.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="field">

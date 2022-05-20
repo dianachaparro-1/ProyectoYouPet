@@ -44,6 +44,12 @@
             <input readonly="{{readOnly}}" currencyMask [options]="{ allowNegative: false, precision: 0, nullable: true, allowZero: true, default: 0 }" [formControl]="itemData.get('price')" matInput>
             <mat-error *ngIf="!itemData.get('price').valid">Monto inválido</mat-error>
         </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Unidades disponibles</mat-label>
+            <input readonly="{{readOnly}}" [formControl]="itemData.get('stock')" matInput>
+            <mat-error *ngIf="!itemData.get('stock').valid">Cantidad inválida</mat-error>
+        </mat-form-field>
           <br>
         <div class="emphasized">Envios</div>
         <mat-checkbox disabled="{{readOnly}}" [formControl]="itemData.get('freeShipping')" color="primary">Envío gratis</mat-checkbox>
